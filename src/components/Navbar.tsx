@@ -13,7 +13,8 @@ import {
 
 const Navbar = () => {
   return (
-    <header className="flex w-screen bg-dark p-4">
+    <header className="flex items-center justify-between w-screen bg-dark p-4 bg-neutral-950">
+      <h2 className="text-white font-normal font-chakra">RentIO</h2>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
