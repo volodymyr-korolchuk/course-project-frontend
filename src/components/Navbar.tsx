@@ -33,7 +33,7 @@ const Navbar: React.FC = ({}) => {
 
   const userProfile = (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="font-chakra">
+      <DropdownMenuTrigger asChild className="font-comfortaa">
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src="/avatars/01.png" alt="@shadcn" />
@@ -42,7 +42,7 @@ const Navbar: React.FC = ({}) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="font-chakra dark w-56"
+        className="font-comfortaa dark w-56"
         align="end"
         forceMount
       >
@@ -75,11 +75,14 @@ const Navbar: React.FC = ({}) => {
   );
 
   return (
-    <header className="flex items-center font-chakra justify-between w-screen bg-dark p-4 px-5 h-16 bg-neutral-950">
-      <h2 className="text-neutral-400 font-normal">RentIO</h2>
+    <header className="flex items-center top-0 sticky font-comfortaa justify-between w-screen bg-dark p-4 px-5 h-16 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800">
+      <h2 className="text-neutral-200 font-normal">RentIO</h2>
 
       <div className="flex items-center justify-between gap-5">
-        <Input className="dark text-white" placeholder="Search..." />
+        <Input
+          className="dark text-white hover:bg-neutral-800"
+          placeholder="Search..."
+        />
 
         <nav className="flex items-center justify-between">
           {isPublicRoute ? publicLinkElements : userProfile}
