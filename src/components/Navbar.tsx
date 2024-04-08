@@ -75,7 +75,7 @@ const Navbar: React.FC = ({}) => {
   );
 
   return (
-    <header className="flex items-center top-0 sticky font-comfortaa justify-between w-screen bg-dark p-4 px-5 h-16 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800">
+    <header className="flex items-center font-comfortaa justify-between absolute w-screen bg-dark p-4 px-5 h-16 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800">
       <h2 className="text-neutral-200 font-normal">RentIO</h2>
 
       <div className="flex items-center justify-between gap-5">

@@ -2,9 +2,9 @@ import Sidebar from "@/components/Home/Sidebar";
 
 const Home = () => {
   return (
-    <main className="flex bg-primary h-full overflow-hidden">
+    <main className="flex h-screen bg-primary overflow-hidden bg-green-100 pt-16">
       <Sidebar />
-      <section className="h-full">main section</section>
+      <section className="flex-1 bg-red-400">main section</section>
     </main>
   );
 };
