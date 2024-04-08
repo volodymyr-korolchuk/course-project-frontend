@@ -27,7 +27,7 @@ const Navbar: React.FC = ({}) => {
 
   const publicLinkElements = publicLinks.map((link) => (
     <Link key={link.path} to={link.path}>
-      <p className="text-white">{link.title}</p>
+      <p className="text-white text-sm w-16">{link.title}</p>
     </Link>
   ));
 

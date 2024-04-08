@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <main className="flex bg-primary h-full overflow-hidden">
       <Sidebar />
-      <section className="flex-1">main section</section>
+      <section className="h-full">main section</section>
     </main>
   );
 };
