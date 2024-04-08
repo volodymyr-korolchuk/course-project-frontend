@@ -21,8 +21,8 @@ const Sidebar = () => {
   const fleetEntries = ["Garage", "Classes", "In Use"];
 
   return (
-    <aside className="w-56 bg-green-500 h-full p-2">
-      <section className="flex flex-col items-center justify-center gap-2">
+    <aside className="w-56 bg-neutral-900 h-full p-1">
+      <section className="flex flex-col items-center justify-center gap-1">
         <CollapsibleWrapper triggerTitle="Car Rental">
           {carRentalEntries.map((item) => (
             <CollapsibleEntry key={item} textContent={item} />

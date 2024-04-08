@@ -22,7 +22,7 @@ const CollapsibleWrapper: React.FC<Props> = ({ children, triggerTitle }) => {
     >
       <div className="flex items-center justify-between space-x-4">
         <CollapsibleTrigger asChild>
-          <Button className="flex-1 font-light font-comfortaa h-12 rounded-sm">
+          <Button className="flex-1 justify-start font-light font-comfortaa h-12 rounded-sm hover:bg-neutral-700">
             {triggerTitle}
           </Button>
         </CollapsibleTrigger>
