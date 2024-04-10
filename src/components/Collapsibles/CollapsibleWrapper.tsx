@@ -21,14 +21,17 @@ const CollapsibleWrapper: React.FC<Props> = ({ children, triggerTitle }) => {
       onOpenChange={setIsOpen}
       className="w-full space-y-2"
     >
-      <div className="flex items-center justify-between space-x-4">
+      <div className="flex items-center justify-between space-x-2">
         <CollapsibleTrigger asChild>
-          <Button className="flex-1 justify-between font-light font-comfortaa h-12 rounded-sm hover:bg-neutral-700">
+          <Button
+            className="flex-1 justify-between font-light font-comfortaa h-12 rounded-sm 
+          hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-100 text-neutral-950 dark:border border-neutral-800 dark:text-white dark:bg-neutral-800"
+          >
             {triggerTitle} <IoIosArrowDown />
           </Button>
         </CollapsibleTrigger>
       </div>
-      <CollapsibleContent className="space-y-2">{children}</CollapsibleContent>
+      <CollapsibleContent className="space-y-1">{children}</CollapsibleContent>
     </Collapsible>
   );
 };

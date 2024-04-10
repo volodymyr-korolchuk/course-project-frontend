@@ -14,7 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import { publicRoutes } from "./../../routes";
 import { Input } from "./ui/input";
 
-const Navbar: React.FC = ({}) => {
+const Navbar: React.FC = () => {
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -27,7 +27,7 @@ const Navbar: React.FC = ({}) => {
 
   const publicLinkElements = publicLinks.map((link) => (
     <Link key={link.path} to={link.path}>
-      <p className="text-white text-sm w-16">{link.title}</p>
+      <p className="dark:text-white text-sm w-16">{link.title}</p>
     </Link>
   ));
 
@@ -36,13 +36,13 @@ const Navbar: React.FC = ({}) => {
       <DropdownMenuTrigger asChild className="font-comfortaa">
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarImage src="" alt="user-avatar" />
+            <AvatarFallback className="bg-neutral-300">JD</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="font-comfortaa dark w-56"
+        className="font-comfortaa w-56"
         align="end"
         forceMount
       >
@@ -75,14 +75,16 @@ const Navbar: React.FC = ({}) => {
   );
 
   return (
-    <header className="flex items-center font-comfortaa justify-between absolute w-screen bg-dark p-4 px-5 h-16 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800">
-      <h2 className="text-neutral-200 font-normal">RentIO</h2>
+    <header className="flex items-center font-comfortaa justify-between absolute w-screen p-4 px-5 h-16 bg-neutral-100  dark:bg-neutral-950 backdrop-blur-md border-b dark:border-neutral-800">
+      <h2 className="dark:text-neutral-200 font-normal">RentIO</h2>
 
       <div className="flex items-center justify-between gap-5">
-        <Input
-          className="dark text-white hover:bg-neutral-800"
-          placeholder="Search..."
-        />
+        {isPublicRoute ? null : (
+          <Input
+            className="text-neutral-950 dark:text-white hover:bg-neutral-300 dark:hover:bg-neutral-700 border-neutral-400 dark:border-neutral-800"
+            placeholder="Search..."
+          />
+        )}
 
         <nav className="flex items-center justify-between">
           {isPublicRoute ? publicLinkElements : userProfile}

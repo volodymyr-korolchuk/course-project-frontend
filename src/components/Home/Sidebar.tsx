@@ -1,17 +1,21 @@
 import CollapsibleWrapper from "../Collapsibles/CollapsibleWrapper";
-import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
+import { DropdownMenuSeparator } from "../ui/dropdown-menu";
 
 const CollapsibleEntry = ({ textContent }: { textContent: string }) => {
   return (
-    <div className="flex-1 bg-primary font-light cursor-pointer hover:bg-neutral-800 text-neutral-400 p-2 px-2 rounded-md group">
-      <span className="flex gap-1 items-center">
-        <IoIosArrowForward
-          size={25}
-          className="group-hover:translate-x-1 transition-all ease-in-out"
-        />
-        {textContent}
-      </span>
-    </div>
+    <>
+      <DropdownMenuSeparator className="mx-1 dark:bg-neutral-800" />
+      <div className="flex-1 font-light cursor-pointer bg-neutral-100  dark:bg-transparent dark:hover:bg-neutral-700 p-2 px-2 rounded-[2px] group transition-all ease-in-out">
+        <span className="flex items-center justify-between dark:text-neutral-300 text-neutral-900 dark:group-hover:text-green-500">
+          {textContent}
+          <IoIosArrowBack
+            size={25}
+            className="scale-0 group-hover:scale-100 transition-all ease-in-out"
+          />
+        </span>
+      </div>
+    </>
   );
 };
 
@@ -21,8 +25,8 @@ const Sidebar = () => {
   const fleetEntries = ["Garage", "Classes", "In Use"];
 
   return (
-    <aside className="min-w-40 w-56 bg-neutral-900 h-full p-1">
-      <section className="flex flex-col items-center justify-center gap-1">
+    <aside className="min-w-40 w-56 bg-green-200 dark:bg-neutral-950 border-r-[1px] dark:border-neutral-800 h-full p-2">
+      <section className="flex flex-col items-center justify-center gap-2">
         <CollapsibleWrapper triggerTitle="Car Rental">
           {carRentalEntries.map((item) => (
             <CollapsibleEntry key={item} textContent={item} />
