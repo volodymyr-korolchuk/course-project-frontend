@@ -5,6 +5,7 @@ import {
   CollapsibleTrigger,
 } from "../ui/collapsible";
 import { Button } from "../ui/button";
+import { IoIosArrowDown } from "react-icons/io";
 
 interface Props {
   children: React.ReactNode[];
@@ -22,8 +23,8 @@ const CollapsibleWrapper: React.FC<Props> = ({ children, triggerTitle }) => {
     >
       <div className="flex items-center justify-between space-x-4">
         <CollapsibleTrigger asChild>
-          <Button className="flex-1 justify-start font-light font-comfortaa h-12 rounded-sm hover:bg-neutral-700">
-            {triggerTitle}
+          <Button className="flex-1 justify-between font-light font-comfortaa h-12 rounded-sm hover:bg-neutral-700">
+            {triggerTitle} <IoIosArrowDown />
           </Button>
         </CollapsibleTrigger>
       </div>
