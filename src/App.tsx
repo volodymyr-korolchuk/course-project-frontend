@@ -10,6 +10,7 @@ import HomeLayout from "./pages/Home/Home.layout";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home/Home";
+import { ThemeProvider } from "./contexts/ThemeProvider";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,7 +25,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;

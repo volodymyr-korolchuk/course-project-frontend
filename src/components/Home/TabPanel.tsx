@@ -10,12 +10,12 @@ const TabPanel = () => {
   ];
 
   return (
-    <ul className="flex gap-1 bg-neutral-100 dark:bg-neutral-950 p-1 w-full overflow-auto">
+    <ul className="flex gap-1 bg-neutral-100 dark:bg-neutral-950 p-1 w-full overflow-auto h-auto border-b border-neutral-800 shadow-md">
       {list.map((item) => (
         <li key={item}>
           <Button
             className="rounded-[2px] px-4
-          hover:bg-neutral-300 dark:hover:bg-neutral-600 bg-neutral-100 text-neutral-950 dark:text-neutral-200 dark:bg-neutral-700"
+          hover:bg-emerald-100 dark:hover:bg-neutral-600 bg-emerald-200 text-neutral-950 dark:text-neutral-200 dark:bg-neutral-800"
           >
             {item}
           </Button>

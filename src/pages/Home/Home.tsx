@@ -2,18 +2,58 @@ import LeasingDataTable from "@/components/Home/LeasingDataTable/LeasingDataTabl
 import TabPanel from "@/components/Home/TabPanel";
 import { Payment, columns } from "@/components/Home/LeasingDataTable/columns";
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
   return [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@exampwefionwele.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@ex23d2j3ample.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@exawe23oimple.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@exampwefionwele.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@ex23d2j3ample.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@exawe23oimple.com",
+    },
     {
       id: "728ed52f",
       amount: 100,
@@ -60,10 +100,10 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="w-full h-full">
+    <div className="flex flex-col w-full overflow-auto">
       <TabPanel />
-      <section className="flex items-center justify-center flex-col flex-1 bg-red-400 ">
-        <div className="w-full md:px-32 px-16">
+      <section className="flex items-center justify-start flex-col">
+        <div className="w-full md:px-32 px-16 pb-16">
           <LeasingDataTable columns={columns} data={tableData} />
         </div>
       </section>

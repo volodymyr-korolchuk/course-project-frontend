@@ -13,6 +13,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { publicRoutes } from "./../../routes";
 import { Input } from "./ui/input";
+import { ModeToggle } from "./ModeToggle/ModeToggle";
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -27,13 +28,13 @@ const Navbar: React.FC = () => {
 
   const publicLinkElements = publicLinks.map((link) => (
     <Link key={link.path} to={link.path}>
-      <p className="dark:text-white text-sm w-16">{link.title}</p>
+      <p className="dark:text-neutral-100 text-sm w-16">{link.title}</p>
     </Link>
   ));
 
   const userProfile = (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="font-comfortaa">
+      <DropdownMenuTrigger asChild className="">
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src="" alt="user-avatar" />
@@ -41,11 +42,7 @@ const Navbar: React.FC = () => {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="font-comfortaa w-56"
-        align="end"
-        forceMount
-      >
+      <DropdownMenuContent className=" w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">John Doe</p>
@@ -75,13 +72,23 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <header className="flex items-center font-comfortaa justify-between absolute w-screen p-4 px-5 h-16 bg-neutral-100  dark:bg-neutral-950 backdrop-blur-md border-b dark:border-neutral-800">
-      <h2 className="dark:text-neutral-200 font-normal">RentIO</h2>
+    <header className="flex items-center  justify-between absolute w-screen p-4 px-5 h-16 bg-neutral-100  dark:bg-neutral-950 backdrop-blur-md border-b border-neutral-800">
+      <div className="flex items-center justify-center gap-2">
+        <h2 className="dark:text-neutral-200 font-bold text-neutral-600">
+          RentIO
+        </h2>
+        <img
+          src="/car_logo.png"
+          className="opacity-90 scale-70 dark:invert select-none"
+          width={70}
+        />
+      </div>
 
-      <div className="flex items-center justify-between gap-5">
+      <div className="flex items-center justify-between gap-3">
+        <ModeToggle />
         {isPublicRoute ? null : (
           <Input
-            className="text-neutral-950 dark:text-white hover:bg-neutral-300 dark:hover:bg-neutral-700 border-neutral-400 dark:border-neutral-800"
+            className="text-neutral-950 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-700 border-neutral-800 dark:border-neutral-800"
             placeholder="Search..."
           />
         )}

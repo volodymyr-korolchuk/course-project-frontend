@@ -7,10 +7,10 @@ const CollapsibleEntry = ({ textContent }: { textContent: string }) => {
     <>
       <DropdownMenuSeparator className="mx-1 dark:bg-neutral-800" />
       <div className="flex-1 font-light cursor-pointer bg-neutral-100  dark:bg-transparent dark:hover:bg-neutral-700 p-2 px-2 rounded-[2px] group transition-all ease-in-out">
-        <span className="flex items-center justify-between dark:text-neutral-300 text-neutral-900 dark:group-hover:text-green-500">
+        <span className="flex items-center justify-between dark:text-neutral-300 text-neutral-900 text-sm dark:group-hover:text-emerald-500">
           {textContent}
           <IoIosArrowBack
-            size={25}
+            size={20}
             className="scale-0 group-hover:scale-100 transition-all ease-in-out"
           />
         </span>
@@ -25,7 +25,7 @@ const Sidebar = () => {
   const fleetEntries = ["Garage", "Classes", "In Use"];
 
   return (
-    <aside className="min-w-40 w-56 bg-green-200 dark:bg-neutral-950 border-r-[1px] dark:border-neutral-800 h-full p-2">
+    <aside className="min-w-40 w-56 bg-emerald-200 dark:bg-neutral-950 border-r-[1px] border-neutral-800 h-full p-2">
       <section className="flex flex-col items-center justify-center gap-2">
         <CollapsibleWrapper triggerTitle="Car Rental">
           {carRentalEntries.map((item) => (
