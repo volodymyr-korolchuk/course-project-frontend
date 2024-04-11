@@ -1,20 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Button } from "@/components/ui/button";
-
-export type Rental = {
-  id: string;
-  customerEmail: string;
-  pickupDate: string;
-  returnDate: string;
-  pickupLocation: string;
-  vehicleClass: string;
-  vehicle: string;
-  totalPrice: number;
-  status: "pending" | "processing" | "success" | "failed";
-};
+import { Rental } from "@/types";
 
 export const columns: ColumnDef<Rental>[] = [
   {
@@ -54,7 +43,7 @@ export const columns: ColumnDef<Rental>[] = [
     },
   },
   {
-    accessorKey: "customerEmail",
+    accessorKey: "email",
     header: ({ column }) => {
       return (
         <Button
@@ -160,20 +149,6 @@ export const columns: ColumnDef<Rental>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "notes",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Notes
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

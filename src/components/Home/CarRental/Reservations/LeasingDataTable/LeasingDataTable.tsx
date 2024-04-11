@@ -38,6 +38,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { Rental } from "@/types";
+import { capitalize, separateWords } from "@/lib/utils";
+import { features } from "process";
 
 interface LeasingDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,7 +53,7 @@ function LeasingDataTable<TData, TValue>({
 }: LeasingDataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [filterFeature, setFilterFeature] = useState("customerEmail");
+  const [filterFeature, setFilterFeature] = useState("email");
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
@@ -73,16 +76,54 @@ function LeasingDataTable<TData, TValue>({
     },
   });
 
-  const filterByEmailInput = (
-    <Input
-      placeholder="Filter emails..."
-      /* TODO: adjust stuff here for filtering by different features */
-      value={(table.getColumn(filterFeature)?.getFilterValue() as string) ?? ""}
-      onChange={(event) =>
-        table.getColumn(filterFeature)?.setFilterValue(event.target.value)
-      }
-      className="max-w-sm dark:bg-neutral-900 border border-neutral-800 dark:text-neutral-100"
-    />
+  type RentalKeys = keyof Rental;
+
+  const rentalKeys: RentalKeys[] = [
+    "id",
+    "email",
+    "pickupLocation",
+    "vehicleClass",
+    "vehicle",
+    "totalPrice",
+    "status",
+  ];
+
+  const featureFilter = (
+    <div className="flex items-center justify-center gap-2">
+      <Input
+        placeholder="Filter..."
+        value={
+          (table.getColumn(filterFeature)?.getFilterValue() as string) ?? ""
+        }
+        onChange={(event) =>
+          table.getColumn(filterFeature)?.setFilterValue(event.target.value)
+        }
+        className="max-w-sm dark:bg-neutral-900 border border-neutral-800 dark:text-neutral-100"
+      />
+
+      <Select
+        onValueChange={(value) => {
+          setFilterFeature(value);
+        }}
+      >
+        <SelectTrigger className="w-[200px] gap-1">
+          <SelectValue placeholder={"Feature"}>
+            {separateWords(capitalize(filterFeature))}
+          </SelectValue>
+        </SelectTrigger>
+
+        <SelectContent
+          side="top"
+          className="dark:bg-neutral-900/50 backdrop-blur-[5px]"
+        >
+          {rentalKeys.map((feature) => (
+            <SelectItem key={feature} value={feature} className="capitalize">
+              {separateWords(feature)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 
   const selectedRows = (
@@ -123,8 +164,8 @@ function LeasingDataTable<TData, TValue>({
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="ml-auto font-light dark:bg-emerald-500 
-              dark:hover:bg-emerald-400 border border-neutral-800 dark:text-neutral-100"
+          className="ml-auto font-light dark:bg-indigo-500 
+              dark:hover:bg-indigo-400 border border-neutral-800 dark:text-neutral-100"
         >
           Columns
         </Button>
@@ -144,7 +185,7 @@ function LeasingDataTable<TData, TValue>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {separateWords(column.id)}
               </DropdownMenuCheckboxItem>
             );
           })}
@@ -154,7 +195,7 @@ function LeasingDataTable<TData, TValue>({
 
   const controlsContainer = (
     <div className="flex items-center py-3">
-      {filterByEmailInput}
+      {featureFilter}
       {selectedRows}
       {rowsPerPageSelector}
       {tableDisplayedColumnsSelector}
