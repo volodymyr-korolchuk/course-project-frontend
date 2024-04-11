@@ -9,7 +9,7 @@ import AppLayout from "./App.layout";
 import HomeLayout from "./pages/Home/Home.layout";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import Home from "./pages/Home/Home";
+import Reservations from "./components/Home/CarRental/Reservations/Reservations";
 import { ThemeProvider } from "./contexts/ThemeProvider";
 
 const router = createBrowserRouter(
@@ -18,7 +18,8 @@ const router = createBrowserRouter(
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
       <Route path="home" element={<HomeLayout />}>
-        <Route path="" element={<Home />}></Route>
+        <Route path="" element={null}></Route>
+        <Route path="reservations" element={<Reservations />}></Route>
       </Route>
     </Route>
   )

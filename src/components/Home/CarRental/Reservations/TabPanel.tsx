@@ -1,4 +1,4 @@
-import { Button } from "../ui/button";
+import { Button } from "../../../ui/button";
 
 const TabPanel = () => {
   const list = [
@@ -14,7 +14,7 @@ const TabPanel = () => {
       {list.map((item) => (
         <li key={item}>
           <Button
-            className="rounded-[2px] px-4
+            className="rounded-sm px-4
           hover:bg-emerald-100 dark:hover:bg-neutral-600 bg-emerald-200 text-neutral-950 dark:text-neutral-200 dark:bg-neutral-800"
           >
             {item}
