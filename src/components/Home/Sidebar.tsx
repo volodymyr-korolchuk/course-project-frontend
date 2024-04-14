@@ -1,6 +1,7 @@
 import CollapsibleWrapper from "../Collapsibles/CollapsibleWrapper";
 import { IoIosArrowBack } from "react-icons/io";
 import { DropdownMenuSeparator } from "../ui/dropdown-menu";
+import { BiSolidCarGarage } from "react-icons/bi";
 
 const CollapsibleEntry = ({ textContent }: { textContent: string }) => {
   return (
@@ -25,7 +26,7 @@ const Sidebar = () => {
   const fleetEntries = ["Garage", "Classes", "In Use"];
 
   return (
-    <aside className="w-60 bg-indigo-400 dark:bg-neutral-950 border-r-[1px] border-neutral-800 h-full p-2">
+    <aside className="w-60 dark:bg-neutral-950 border-r-[1px] border-neutral-800 h-full p-2">
       <section className="flex flex-col items-center justify-center gap-2">
         <CollapsibleWrapper triggerTitle="Car Rental">
           {carRentalEntries.map((item) => (
