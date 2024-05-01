@@ -1,9 +1,10 @@
-import LeasingDataTable from "@/components/Home/CarRental/Reservations/LeasingDataTable/LeasingDataTable";
-import TabPanel from "@/components/Home/CarRental/Reservations/TabPanel";
-import { columns } from "@/components/Home/CarRental/Reservations/LeasingDataTable/columns";
+import LeasingDataTable from "@/components/Employee/CarRental/Reservations/LeasingDataTable/LeasingDataTable";
+import TabPanel from "@/components/Employee/CarRental/Reservations/TabPanel";
+import { columns } from "@/components/Employee/CarRental/Reservations/LeasingDataTable/columns";
 import { useEffect, useState } from "react";
 import { Rental } from "@/types";
 import { formatDate } from "@/lib/utils";
+import { useAuthStore } from "@/zustand/store";
 
 async function getData(): Promise<Rental[]> {
   // Fetch data from your API here.
@@ -121,14 +122,24 @@ async function getData(): Promise<Rental[]> {
   ];
 }
 
-const Reservations = () => {
+const Leasings = () => {
   const [tableData, setTableData] = useState<Rental[]>([]);
+  const { accessToken } = useAuthStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getData();
-        setTableData(data);
+        const response = await fetch("http://localhost:5000/leasings", {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        const rp = await response.json();
+        console.log(rp);
+
+        setTableData(rp);
       } catch (error) {
         if (error instanceof Error) {
           console.error(error.message);
@@ -151,4 +162,4 @@ const Reservations = () => {
   );
 };
 
-export default Reservations;
+export default Leasings;

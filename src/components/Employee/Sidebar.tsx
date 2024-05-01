@@ -1,7 +1,7 @@
 import CollapsibleWrapper from "../Collapsibles/CollapsibleWrapper";
 import { IoIosArrowBack } from "react-icons/io";
 import { DropdownMenuSeparator } from "../ui/dropdown-menu";
-import { BiSolidCarGarage } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const CollapsibleEntry = ({ textContent }: { textContent: string }) => {
   return (
@@ -21,7 +21,11 @@ const CollapsibleEntry = ({ textContent }: { textContent: string }) => {
 };
 
 const Sidebar = () => {
-  const carRentalEntries = ["Reservations", "Payments", "Calendar"];
+  const carRentalEntries = [
+    { path: "/home/leasings", title: "Leasings" },
+    { path: "/home/payments", title: "Payments" },
+    { path: "/home/calendar", title: "Calendar" },
+  ];
 
   const fleetEntries = ["Garage", "Classes", "In Use"];
 
@@ -30,7 +34,9 @@ const Sidebar = () => {
       <section className="flex flex-col items-center justify-center gap-2">
         <CollapsibleWrapper triggerTitle="Car Rental">
           {carRentalEntries.map((item) => (
-            <CollapsibleEntry key={item} textContent={item} />
+            <Link to={item.path}>
+              <CollapsibleEntry key={item.path} textContent={item.title} />
+            </Link>
           ))}
         </CollapsibleWrapper>
 

@@ -6,7 +6,9 @@ const AppLayout = () => {
   return (
     <Suspense fallback={null}>
       <Navbar />
-      <Outlet />
+      <div className="pt-16 h-screen">
+        <Outlet />
+      </div>
     </Suspense>
   );
 };

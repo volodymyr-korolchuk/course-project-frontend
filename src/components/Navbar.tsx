@@ -7,17 +7,20 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { publicRoutes } from "./../../routes";
 import { Input } from "./ui/input";
 import { ModeToggle } from "./ModeToggle/ModeToggle";
+import { useAuthStore } from "@/zustand/store";
+import { ROUTES } from "@/api";
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const pathname = location.pathname;
+  const navigate = useNavigate();
+  const { user, clearStore } = useAuthStore();
 
   const isPublicRoute = publicRoutes.includes(pathname);
 
@@ -32,50 +35,51 @@ const Navbar: React.FC = () => {
     </Link>
   ));
 
+  const handleLogOut = () => {
+    clearStore();
+    navigate(ROUTES.signIn);
+    localStorage.removeItem("refreshToken");
+  };
+
   const userProfile = (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="">
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src="" alt="user-avatar" />
-            <AvatarFallback className="bg-neutral-300">JD</AvatarFallback>
+            <AvatarFallback className="bg-neutral-300">
+              {user && user.firstName.charAt(0) + user.lastName.charAt(0)}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">John Doe</p>
+            <p className="text-sm font-medium leading-none">
+              {user && `${user.firstName} ${user.lastName}`}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
-              johndoe217@gmail.com
+              {user && user.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogOut}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 
   return (
-    <header className="flex items-center  justify-between absolute w-screen p-4 px-5 h-16 bg-neutral-100  dark:bg-neutral-950 backdrop-blur-md border-b border-neutral-800">
+    <header className="absolute z-[100] top-0 flex items-center  justify-between w-full p-4 px-5 h-16 bg-neutral-100  dark:bg-neutral-950 backdrop-blur-md border-b border-neutral-800">
       <div className="flex items-center justify-center gap-2">
         <h2 className="dark:text-neutral-200 font-bold text-neutral-600">
-          RentIO
+          SolidRents
         </h2>
         <img
           src="/car_logo.png"
