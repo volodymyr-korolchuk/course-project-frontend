@@ -11,6 +11,14 @@ export const API_ROUTES = {
   },
   fleet: {
     all: `${BASE_URL}/fleet`,
+    create: `${BASE_URL}/fleet`,
+  },
+  staff: {
+    all: `${BASE_URL}/staff`,
+    create: `${BASE_URL}/staff`,
+  },
+  rentals: {
+    create: `${BASE_URL}/leasings`,
   },
 };
 

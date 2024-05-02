@@ -42,7 +42,7 @@ body {
 .rdp {
   @apply bg-neutral-800;
   @apply rounded-md;
-  @apply p-4;
+  @apply py-4 px-3;
   margin: 0;
 }
 

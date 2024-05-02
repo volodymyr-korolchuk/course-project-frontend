@@ -20,6 +20,7 @@ import VehiclesOverview from "./components/Home/Rentals/VehiclesOverview";
 import VehicleRental from "./components/Home/Rentals/VehicleRental";
 import PersistLogin from "./components/Auth/PersistLogin";
 import "react-day-picker/dist/style.css";
+import RentalCreated from "./components/Home/Rentals/RentalCreated";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +38,10 @@ const router = createBrowserRouter(
             <Route
               path="vehicle-rental/:id"
               element={<VehicleRental />}
+            ></Route>
+            <Route
+              path="vehicle-rental/success"
+              element={<RentalCreated />}
             ></Route>
           </Route>
         </Route>

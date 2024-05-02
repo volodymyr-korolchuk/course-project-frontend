@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { API_ROUTES } from "@/api";
-import { Vehicle } from "@/types";
+import { API_ROUTES, ROUTES } from "@/api";
+import { Employee, Vehicle } from "@/types";
 import { useAuthStore } from "@/zustand/store";
 import { addDays, format } from "date-fns";
 import { DateRange, DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
 import { isValidCssColor } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useRental } from "@/hooks/useRental";
 
-// VehicleInfoComponent
 type VehicleInfoProps = {
   vehicle: Vehicle;
 };
@@ -49,7 +59,6 @@ const VehicleInfoComponent: React.FC<VehicleInfoProps> = ({ vehicle }) => {
   );
 };
 
-// VehicleImageComponent
 type VehicleImageProps = {
   vehicle: Vehicle;
 };
@@ -65,7 +74,6 @@ const VehicleImageComponent: React.FC<VehicleImageProps> = ({ vehicle }) => {
   );
 };
 
-// DateRangePickerComponent
 type DateRangePickerProps = {
   range: DateRange | undefined;
   setRange: (range: DateRange | undefined) => void;
@@ -78,7 +86,7 @@ const DateRangePickerComponent: React.FC<DateRangePickerProps> = ({
   footer,
 }) => {
   return (
-    <div className="flex gap-4">
+    <div className="flex w-1/2">
       <DayPicker
         id="test"
         mode="range"
@@ -91,7 +99,6 @@ const DateRangePickerComponent: React.FC<DateRangePickerProps> = ({
   );
 };
 
-// TimePickerComponent
 type TimePickerProps = {
   pickupTime: string;
   returnTime: string;
@@ -137,7 +144,6 @@ const TimePickerComponent: React.FC<TimePickerProps> = ({
   );
 };
 
-// TotalComponent
 type TotalProps = {
   vehicle: Vehicle | undefined;
   range: DateRange | undefined;
@@ -174,19 +180,23 @@ const TotalComponent: React.FC<TotalProps> = ({
   );
 };
 
-// VehicleRental
 const VehicleRental: React.FC = () => {
-  const { id } = useParams();
-  const { accessToken } = useAuthStore();
-
   const defaultSelected: DateRange = {
     from: new Date(),
     to: addDays(new Date(), 2),
   };
   const [vehicle, setVehicle] = useState<Vehicle>();
+  const [employees, setEmployees] = useState<Employee[]>();
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number>();
+
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
   const [pickupTime, setPickupTime] = useState("");
   const [returnTime, setReturnTime] = useState("");
+
+  const { id } = useParams();
+  const { create } = useRental();
+  const navigate = useNavigate();
+  const { accessToken, user } = useAuthStore();
 
   const handlePickupTimeChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -207,6 +217,36 @@ const VehicleRental: React.FC = () => {
     }
   };
 
+  const handleCreateRental = async () => {
+    try {
+      if (
+        !user ||
+        !user?.id ||
+        !selectedEmployeeId ||
+        !vehicle?.id ||
+        !range?.from ||
+        !range?.to
+      ) {
+        throw new Error("Not all fields are filled.");
+      }
+
+      await create({
+        customerId: user.id,
+        createdByEmployeeId: selectedEmployeeId,
+        vehicleId: vehicle.id,
+        pickupDate: range.from.toISOString(),
+        returnDate: range.to.toISOString(),
+        allowedMileage: 200,
+      });
+
+      navigate(`${ROUTES.home.vehiclesRental}/success`);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchVehicle = async () => {
       const response = await fetch(`${API_ROUTES.fleet.all}/${id}`, {
@@ -221,6 +261,20 @@ const VehicleRental: React.FC = () => {
       setVehicle(data);
     };
 
+    const fetchEmployees = async () => {
+      const response = await fetch(`http://localhost:5000/customers`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const data = await response.json();
+      setEmployees(data);
+    };
+
+    fetchEmployees();
     fetchVehicle();
   }, []);
 
@@ -250,15 +304,67 @@ const VehicleRental: React.FC = () => {
             {vehicle.make} {vehicle.model} {vehicle.productionYear}
           </h1>
         )}
-        {vehicle && (
-          <>
-            <div className="flex gap-3">
-              <DateRangePickerComponent
-                range={range}
-                setRange={setRange}
-                footer={footer}
-              />
-              <div className="flex w-full flex-col gap-3">
+        <Tabs defaultValue="rental" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="rental">Rental</TabsTrigger>
+            <TabsTrigger value="details">Details</TabsTrigger>
+          </TabsList>
+          <TabsContent value="rental">
+            {vehicle && (
+              <div className="flex w-full gap-2">
+                <DateRangePickerComponent
+                  range={range}
+                  setRange={setRange}
+                  footer={footer}
+                />
+                <div className="flex flex-col gap-2 w-1/2">
+                  <TimePickerComponent
+                    pickupTime={pickupTime}
+                    returnTime={returnTime}
+                    handlePickupTimeChange={handlePickupTimeChange}
+                    handleReturnTimeChange={handleReturnTimeChange}
+                  />
+                  <TotalComponent
+                    vehicle={vehicle}
+                    range={range}
+                    pickupTime={pickupTime}
+                    returnTime={returnTime}
+                  />
+                </div>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="details">
+            <div className="flex w-full gap-2">
+              <div className="w-1/2 bg-neutral-800 rounded-md p-4">
+                <Select
+                  onValueChange={(i) =>
+                    setSelectedEmployeeId(employees ? employees[+i - 1].id : 1)
+                  }
+                >
+                  <SelectTrigger className="w-full bg-neutral-900">
+                    <SelectValue placeholder="Select an Employee" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Employee</SelectLabel>
+                      {employees &&
+                        employees.map((employee) => {
+                          return (
+                            <SelectItem
+                              key={employee.id}
+                              value={employee.id.toString()}
+                            >
+                              {employee.firstName} {employee.lastName}
+                            </SelectItem>
+                          );
+                        })}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex w-1/2 flex-col gap-2">
                 <TimePickerComponent
                   pickupTime={pickupTime}
                   returnTime={returnTime}
@@ -271,15 +377,16 @@ const VehicleRental: React.FC = () => {
                   pickupTime={pickupTime}
                   returnTime={returnTime}
                 />
-                <Button className="bg-indigo-400 text-xl h-12">
+                <Button
+                  className="bg-indigo-400 text-xl h-12"
+                  onClick={handleCreateRental}
+                >
                   Create Rental
                 </Button>
               </div>
-
-              <div className="flex gap-1"></div>
             </div>
-          </>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

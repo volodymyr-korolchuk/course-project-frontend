@@ -25,6 +25,7 @@ export const useLogin = () => {
     if (response.ok) {
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
+
       setAccessToken(data.accessToken);
       setUser(data.user);
 
