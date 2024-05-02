@@ -25,7 +25,7 @@ export const useRental = () => {
         case ROLES.Customer:
           return navigate(ROUTES.home.vehiclesRental, { replace: true });
         case ROLES.Employee:
-          return navigate(ROUTES.staff, { replace: true });
+          return navigate(ROUTES.employees, { replace: true });
         case ROLES.Admin:
           return navigate(ROUTES.admin, { replace: true });
         default:

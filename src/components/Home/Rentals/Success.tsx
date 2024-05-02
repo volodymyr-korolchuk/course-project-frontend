@@ -1,6 +1,6 @@
 import { IoMdCheckmark } from "react-icons/io";
 
-const RentalCreated = () => {
+const Success = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center gap-2">
       <div className="flex items-center justify-center gap-2">
@@ -12,4 +12,4 @@ const RentalCreated = () => {
   );
 };
 
-export default RentalCreated;
+export default Success;

@@ -13,9 +13,9 @@ export const API_ROUTES = {
     all: `${BASE_URL}/fleet`,
     create: `${BASE_URL}/fleet`,
   },
-  staff: {
-    all: `${BASE_URL}/staff`,
-    create: `${BASE_URL}/staff`,
+  employees: {
+    all: `${BASE_URL}/employees`,
+    create: `${BASE_URL}/employees`,
   },
   rentals: {
     create: `${BASE_URL}/leasings`,
@@ -30,6 +30,6 @@ export const ROUTES = {
     index: "/home",
     vehiclesRental: "/home/vehicle-rental",
   },
-  staff: "/staff",
+  employees: "/employees",
   admin: "/admin",
 };

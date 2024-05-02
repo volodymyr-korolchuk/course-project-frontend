@@ -20,7 +20,8 @@ import VehiclesOverview from "./components/Home/Rentals/VehiclesOverview";
 import VehicleRental from "./components/Home/Rentals/VehicleRental";
 import PersistLogin from "./components/Auth/PersistLogin";
 import "react-day-picker/dist/style.css";
-import RentalCreated from "./components/Home/Rentals/RentalCreated";
+import Success from "./components/Home/Rentals/Success";
+import Failure from "./components/Home/Rentals/Failure";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,17 +40,15 @@ const router = createBrowserRouter(
               path="vehicle-rental/:id"
               element={<VehicleRental />}
             ></Route>
-            <Route
-              path="vehicle-rental/success"
-              element={<RentalCreated />}
-            ></Route>
+            <Route path="vehicle-rental/success" element={<Success />}></Route>
+            <Route path="vehicle-rental/failure" element={<Failure />}></Route>
           </Route>
         </Route>
 
         <Route
           element={<RequireAuth allowedRoles={[ROLES.Employee, ROLES.Admin]} />}
         >
-          <Route path="staff" element={<EmployeeLayout />}>
+          <Route path="employees" element={<EmployeeLayout />}>
             <Route path="leasings" element={<Leasings />}></Route>
           </Route>
         </Route>

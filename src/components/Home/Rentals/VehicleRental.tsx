@@ -20,11 +20,7 @@ import {
 } from "@/components/ui/select";
 import { useRental } from "@/hooks/useRental";
 
-type VehicleInfoProps = {
-  vehicle: Vehicle;
-};
-
-const VehicleInfoComponent: React.FC<VehicleInfoProps> = ({ vehicle }) => {
+const VehicleInfoComponent: React.FC<{ vehicle: Vehicle }> = ({ vehicle }) => {
   return (
     <div className="flex flex-col bg-neutral-800 rounded-lg border-4 border-neutral-700">
       <h3 className="text-3xl font-bold bg-neutral-700 p-4 rounded-t">
@@ -59,11 +55,7 @@ const VehicleInfoComponent: React.FC<VehicleInfoProps> = ({ vehicle }) => {
   );
 };
 
-type VehicleImageProps = {
-  vehicle: Vehicle;
-};
-
-const VehicleImageComponent: React.FC<VehicleImageProps> = ({ vehicle }) => {
+const VehicleImageComponent: React.FC<{ vehicle: Vehicle }> = ({ vehicle }) => {
   return (
     <div className="h-96">
       <img
@@ -74,17 +66,11 @@ const VehicleImageComponent: React.FC<VehicleImageProps> = ({ vehicle }) => {
   );
 };
 
-type DateRangePickerProps = {
+const DateRangePickerComponent: React.FC<{
   range: DateRange | undefined;
   setRange: (range: DateRange | undefined) => void;
   footer: JSX.Element;
-};
-
-const DateRangePickerComponent: React.FC<DateRangePickerProps> = ({
-  range,
-  setRange,
-  footer,
-}) => {
+}> = ({ range, setRange, footer }) => {
   return (
     <div className="flex w-1/2">
       <DayPicker
@@ -99,14 +85,12 @@ const DateRangePickerComponent: React.FC<DateRangePickerProps> = ({
   );
 };
 
-type TimePickerProps = {
+const TimePickerComponent: React.FC<{
   pickupTime: string;
   returnTime: string;
   handlePickupTimeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleReturnTimeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-const TimePickerComponent: React.FC<TimePickerProps> = ({
+}> = ({
   pickupTime,
   returnTime,
   handlePickupTimeChange,
@@ -144,19 +128,29 @@ const TimePickerComponent: React.FC<TimePickerProps> = ({
   );
 };
 
-type TotalProps = {
+const TotalComponent: React.FC<{
   vehicle: Vehicle | undefined;
   range: DateRange | undefined;
   pickupTime: string;
   returnTime: string;
-};
+}> = ({ vehicle, range, pickupTime, returnTime }) => {
+  const calculateHours = (
+    startDate: Date,
+    endDate: Date,
+    pickupTime: string,
+    returnTime: string
+  ): number => {
+    if (!pickupTime || !returnTime) return 0;
 
-const TotalComponent: React.FC<TotalProps> = ({
-  vehicle,
-  range,
-  pickupTime,
-  returnTime,
-}) => {
+    const millisecondsPerHour = 1000 * 60 * 60;
+    const hours =
+      (endDate.getTime() - startDate.getTime()) / millisecondsPerHour;
+    const pickupHour = parseFloat(pickupTime.split(":")[0]);
+    const returnHour = parseFloat(returnTime.split(":")[0]);
+    const hourDiff = returnHour - pickupHour;
+    return Math.abs(hours) + hourDiff; // Return absolute value to handle negative durations
+  };
+
   return (
     <div className="flex flex-col gap-2 justify-between bg-neutral-800 h-fit p-4 w-full rounded-md flex-1">
       <p className="text-xl font-semibold">Total: </p>
@@ -244,6 +238,7 @@ const VehicleRental: React.FC = () => {
       if (error instanceof Error) {
         toast.error(error.message);
       }
+      navigate(`${ROUTES.home.vehiclesRental}/failure`);
     }
   };
 
@@ -262,7 +257,7 @@ const VehicleRental: React.FC = () => {
     };
 
     const fetchEmployees = async () => {
-      const response = await fetch(`http://localhost:5000/customers`, {
+      const response = await fetch(API_ROUTES.employees.all, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -390,22 +385,6 @@ const VehicleRental: React.FC = () => {
       </div>
     </div>
   );
-};
-
-const calculateHours = (
-  startDate: Date,
-  endDate: Date,
-  pickupTime: string,
-  returnTime: string
-): number => {
-  if (!pickupTime || !returnTime) return 0;
-
-  const millisecondsPerHour = 1000 * 60 * 60;
-  const hours = (endDate.getTime() - startDate.getTime()) / millisecondsPerHour;
-  const pickupHour = parseFloat(pickupTime.split(":")[0]);
-  const returnHour = parseFloat(returnTime.split(":")[0]);
-  const hourDiff = returnHour - pickupHour;
-  return Math.abs(hours) + hourDiff; // Return absolute value to handle negative durations
 };
 
 export default VehicleRental;
