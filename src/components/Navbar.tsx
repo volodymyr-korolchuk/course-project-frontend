@@ -15,6 +15,7 @@ import { Input } from "./ui/input";
 import { ModeToggle } from "./ModeToggle/ModeToggle";
 import { useAuthStore } from "@/zustand/store";
 import { ROUTES } from "@/api";
+import { ROLES } from "@/constants/roles";
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -77,26 +78,24 @@ const Navbar: React.FC = () => {
 
   return (
     <header className="absolute z-[100] top-0 flex items-center  justify-between w-full p-4 px-5 h-16 bg-neutral-100  dark:bg-neutral-950 backdrop-blur-md border-b border-neutral-800">
-      <div className="flex items-center justify-center gap-2">
-        <h2 className="dark:text-neutral-200 font-bold text-neutral-600">
-          SolidRents
-        </h2>
+      <div className="relative flex items-center justify-center gap-2">
         <img
           src="/car_logo.png"
           className="opacity-90 scale-70 dark:invert select-none"
           width={70}
         />
+        <h2 className="italic flex dark:text-neutral-200 font-bold text-neutral-600">
+          Solid Rents
+        </h2>
+        {user?.role === ROLES.Employee && (
+          <p className="absolute font-light italic text-xs -top-1 -right-8">
+            Staff
+          </p>
+        )}
       </div>
 
       <div className="flex items-center justify-between gap-3">
         <ModeToggle />
-        {isPublicRoute ? null : (
-          <Input
-            className="text-neutral-950 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-700 border-neutral-800 dark:border-neutral-800"
-            placeholder="Search..."
-          />
-        )}
-
         <nav className="flex items-center justify-between">
           {isPublicRoute ? publicLinkElements : userProfile}
         </nav>

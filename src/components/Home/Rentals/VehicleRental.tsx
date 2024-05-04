@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { API_ROUTES, ROUTES } from "@/api";
 import { Employee, Vehicle } from "@/types";
 import { useAuthStore } from "@/zustand/store";
-import { addDays, format } from "date-fns";
+import { addDays, addHours, addMinutes, format } from "date-fns";
 import { DateRange, DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
 import { isValidCssColor } from "@/lib/utils";
@@ -19,8 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRental } from "@/hooks/useRental";
+import { Input } from "@/components/ui/input";
 
-const VehicleInfoComponent: React.FC<{ vehicle: Vehicle }> = ({ vehicle }) => {
+type VehicleInfoProps = {
+  vehicle: Vehicle;
+};
+
+const VehicleInfoComponent: React.FC<VehicleInfoProps> = ({ vehicle }) => {
   return (
     <div className="flex flex-col bg-neutral-800 rounded-lg border-4 border-neutral-700">
       <h3 className="text-3xl font-bold bg-neutral-700 p-4 rounded-t">
@@ -55,7 +60,11 @@ const VehicleInfoComponent: React.FC<{ vehicle: Vehicle }> = ({ vehicle }) => {
   );
 };
 
-const VehicleImageComponent: React.FC<{ vehicle: Vehicle }> = ({ vehicle }) => {
+type VehicleImageProps = {
+  vehicle: Vehicle;
+};
+
+const VehicleImageComponent: React.FC<VehicleImageProps> = ({ vehicle }) => {
   return (
     <div className="h-96">
       <img
@@ -66,11 +75,17 @@ const VehicleImageComponent: React.FC<{ vehicle: Vehicle }> = ({ vehicle }) => {
   );
 };
 
-const DateRangePickerComponent: React.FC<{
+type DateRangePickerProps = {
   range: DateRange | undefined;
   setRange: (range: DateRange | undefined) => void;
   footer: JSX.Element;
-}> = ({ range, setRange, footer }) => {
+};
+
+const DateRangePickerComponent: React.FC<DateRangePickerProps> = ({
+  range,
+  setRange,
+  footer,
+}) => {
   return (
     <div className="flex w-1/2">
       <DayPicker
@@ -85,12 +100,14 @@ const DateRangePickerComponent: React.FC<{
   );
 };
 
-const TimePickerComponent: React.FC<{
+type TimePickerProps = {
   pickupTime: string;
   returnTime: string;
   handlePickupTimeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleReturnTimeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({
+};
+
+const TimePickerComponent: React.FC<TimePickerProps> = ({
   pickupTime,
   returnTime,
   handlePickupTimeChange,
@@ -128,29 +145,19 @@ const TimePickerComponent: React.FC<{
   );
 };
 
-const TotalComponent: React.FC<{
+type TotalProps = {
   vehicle: Vehicle | undefined;
   range: DateRange | undefined;
   pickupTime: string;
   returnTime: string;
-}> = ({ vehicle, range, pickupTime, returnTime }) => {
-  const calculateHours = (
-    startDate: Date,
-    endDate: Date,
-    pickupTime: string,
-    returnTime: string
-  ): number => {
-    if (!pickupTime || !returnTime) return 0;
+};
 
-    const millisecondsPerHour = 1000 * 60 * 60;
-    const hours =
-      (endDate.getTime() - startDate.getTime()) / millisecondsPerHour;
-    const pickupHour = parseFloat(pickupTime.split(":")[0]);
-    const returnHour = parseFloat(returnTime.split(":")[0]);
-    const hourDiff = returnHour - pickupHour;
-    return Math.abs(hours) + hourDiff; // Return absolute value to handle negative durations
-  };
-
+const TotalComponent: React.FC<TotalProps> = ({
+  vehicle,
+  range,
+  pickupTime,
+  returnTime,
+}) => {
   return (
     <div className="flex flex-col gap-2 justify-between bg-neutral-800 h-fit p-4 w-full rounded-md flex-1">
       <p className="text-xl font-semibold">Total: </p>
@@ -182,6 +189,7 @@ const VehicleRental: React.FC = () => {
   const [vehicle, setVehicle] = useState<Vehicle>();
   const [employees, setEmployees] = useState<Employee[]>();
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number>();
+  const [desiredMileage, setDesiredMileage] = useState<number>();
 
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
   const [pickupTime, setPickupTime] = useState("");
@@ -196,6 +204,7 @@ const VehicleRental: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setPickupTime(event.target.value);
+
     if (event.target.value > returnTime) {
       setReturnTime("");
     }
@@ -217,6 +226,7 @@ const VehicleRental: React.FC = () => {
         !user ||
         !user?.id ||
         !selectedEmployeeId ||
+        !desiredMileage ||
         !vehicle?.id ||
         !range?.from ||
         !range?.to
@@ -224,13 +234,37 @@ const VehicleRental: React.FC = () => {
         throw new Error("Not all fields are filled.");
       }
 
+      const rentalDurationRange: DateRange = {
+        from: addMinutes(
+          addHours(range.from, +pickupTime.split(":")[0]),
+          +pickupTime.split(":")[1]
+        ),
+        to: addMinutes(
+          addHours(range.to, +returnTime.split(":")[0]),
+          +returnTime.split(":")[1]
+        ),
+      };
+
       await create({
         customerId: user.id,
         createdByEmployeeId: selectedEmployeeId,
         vehicleId: vehicle.id,
-        pickupDate: range.from.toISOString(),
-        returnDate: range.to.toISOString(),
-        allowedMileage: 200,
+        pickupDate: rentalDurationRange.from?.toISOString()!,
+        returnDate: rentalDurationRange.to?.toISOString()!,
+        allowedMileage: desiredMileage ?? 100,
+        amountDue: Number(
+          Number(
+            vehicle?.VehicleClass.pricePerHour *
+              calculateHours(
+                range?.from ?? new Date(),
+                range?.to ?? new Date(),
+                pickupTime,
+                returnTime
+              )
+          )
+            .toString()
+            .split(".")[0]
+        ),
       });
 
       navigate(`${ROUTES.home.vehiclesRental}/success`);
@@ -257,7 +291,7 @@ const VehicleRental: React.FC = () => {
     };
 
     const fetchEmployees = async () => {
-      const response = await fetch(API_ROUTES.employees.all, {
+      const response = await fetch(API_ROUTES.employee.all, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -333,6 +367,7 @@ const VehicleRental: React.FC = () => {
           <TabsContent value="details">
             <div className="flex w-full gap-2">
               <div className="w-1/2 bg-neutral-800 rounded-md p-4">
+                <h2 className="text-xl px-1 pb-2">Select Employee:</h2>
                 <Select
                   onValueChange={(i) =>
                     setSelectedEmployeeId(employees ? employees[+i - 1].id : 1)
@@ -358,6 +393,14 @@ const VehicleRental: React.FC = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+                <h2 className="text-xl px-1 pt-6 pb-2">Desired Mileage:</h2>
+                <Input
+                  type="text"
+                  value={desiredMileage}
+                  onChange={(e) => setDesiredMileage(+e.target.value)}
+                  placeholder="From 10 to 2000"
+                  className="bg-neutral-900"
+                />
               </div>
               <div className="flex w-1/2 flex-col gap-2">
                 <TimePickerComponent
@@ -385,6 +428,22 @@ const VehicleRental: React.FC = () => {
       </div>
     </div>
   );
+};
+
+const calculateHours = (
+  startDate: Date,
+  endDate: Date,
+  pickupTime: string,
+  returnTime: string
+): number => {
+  if (!pickupTime || !returnTime) return 0;
+
+  const millisecondsPerHour = 1000 * 60 * 60;
+  const hours = (endDate.getTime() - startDate.getTime()) / millisecondsPerHour;
+  const pickupHour = parseFloat(pickupTime.split(":")[0]);
+  const returnHour = parseFloat(returnTime.split(":")[0]);
+  const hourDiff = returnHour - pickupHour;
+  return Math.abs(hours) + hourDiff; // Return absolute value to handle negative durations
 };
 
 export default VehicleRental;

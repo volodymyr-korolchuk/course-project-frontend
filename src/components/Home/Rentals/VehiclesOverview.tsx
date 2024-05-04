@@ -35,11 +35,7 @@ const VehiclesOverview = () => {
     <div className="flex-1 p-4 flex flex-col gap-4 h-full">
       <div className="w-full flex gap-2">
         <div className="flex gap-2">
-          <Input
-            className="w-64 text-neutral-950 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-700 border-neutral-800 dark:border-neutral-300"
-            placeholder="Search..."
-          />
-          <Button className="px-12">Find</Button>
+          <h2 className="text-4xl pt-2 font-semibold">Vehicles overiew</h2>
         </div>
       </div>
 

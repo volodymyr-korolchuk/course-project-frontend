@@ -33,9 +33,9 @@ export const useLogin = () => {
         case ROLES.Customer:
           return navigate(ROUTES.home.index, { replace: true });
         case ROLES.Employee:
-          return navigate(ROUTES.employees, { replace: true });
+          return navigate(ROUTES.employee.index, { replace: true });
         case ROLES.Admin:
-          return navigate(ROUTES.admin, { replace: true });
+          return navigate(ROUTES.admin.index, { replace: true });
         default:
           return navigate(ROUTES.unauthorized, { replace: true });
       }

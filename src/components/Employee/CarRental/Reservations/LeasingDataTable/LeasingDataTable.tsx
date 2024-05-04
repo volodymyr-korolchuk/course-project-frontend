@@ -40,7 +40,6 @@ import {
 import { useState } from "react";
 import { Rental } from "@/types";
 import { capitalize, separateWords } from "@/lib/utils";
-import { features } from "process";
 
 interface LeasingDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -55,7 +54,6 @@ function LeasingDataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [filterFeature, setFilterFeature] = useState("email");
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -67,12 +65,10 @@ function LeasingDataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
     },
   });
 
@@ -81,11 +77,12 @@ function LeasingDataTable<TData, TValue>({
   const rentalKeys: RentalKeys[] = [
     "id",
     "email",
+    "pickupDate",
+    "returnDate",
     "pickupLocation",
     "vehicleClass",
     "vehicle",
     "totalPrice",
-    "status",
   ];
 
   const featureFilter = (
@@ -126,13 +123,6 @@ function LeasingDataTable<TData, TValue>({
     </div>
   );
 
-  const selectedRows = (
-    <div className="px-4 text-sm dark:text-neutral-100 text-neutral-900 flex items-center justify-end font-light">
-      {table.getFilteredSelectedRowModel().rows.length} of{" "}
-      {table.getFilteredRowModel().rows.length} row(s) selected.
-    </div>
-  );
-
   const rowsPerPageSelector = (
     <div className="flex items-center space-x-2">
       <p className="text-sm font-light dark:text-neutral-100 ">Rows per page</p>
@@ -149,7 +139,7 @@ function LeasingDataTable<TData, TValue>({
           side="top"
           className="dark:bg-neutral-900/50 backdrop-blur-[5px]"
         >
-          {[5, 8, 10, 12].map((pageSize) => (
+          {[4, 6, 8, 10].map((pageSize) => (
             <SelectItem key={pageSize} value={`${pageSize}`}>
               {pageSize}
             </SelectItem>
@@ -194,9 +184,8 @@ function LeasingDataTable<TData, TValue>({
   );
 
   const controlsContainer = (
-    <div className="flex items-center py-3">
+    <div className="flex h-fit items-center gap-8">
       {featureFilter}
-      {selectedRows}
       {rowsPerPageSelector}
       {tableDisplayedColumnsSelector}
     </div>
@@ -230,10 +219,10 @@ function LeasingDataTable<TData, TValue>({
           <TableRow
             key={row.id}
             data-state={row.getIsSelected() && "selected"}
-            className="not-last:border-b border-neutral-800 dark:text-neutral-200 text-neutral-950"
+            className="not-last:border-b border-neutral-800 dark:text-white text-neutral-950"
           >
             {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id} className="text-center">
+              <TableCell key={cell.id} className="text-center text-pretty">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </TableCell>
             ))}
@@ -243,7 +232,7 @@ function LeasingDataTable<TData, TValue>({
         <TableRow>
           <TableCell
             colSpan={columns.length}
-            className="h-24 text-center dark:text-neutral-100"
+            className="text-center dark:text-neutral-100"
           >
             No results.
           </TableCell>
@@ -253,17 +242,17 @@ function LeasingDataTable<TData, TValue>({
   );
 
   return (
-    <>
+    <div className="flex flex-col overflow-hidden p-3 gap-3">
       {controlsContainer}
 
-      <div className="rounded-md border border-neutral-800">
+      <div className="rounded-md flex-1 border border-neutral-800 h-[80%]">
         <Table>
           {tableHeader}
           {tableBody}
         </Table>
+        <Pagination table={table} />
       </div>
-      <Pagination table={table} />
-    </>
+    </div>
   );
 }
 

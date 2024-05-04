@@ -12,13 +12,34 @@ export const API_ROUTES = {
   fleet: {
     all: `${BASE_URL}/fleet`,
     create: `${BASE_URL}/fleet`,
+    export: `${BASE_URL}/fleet/export`,
   },
-  employees: {
+  employee: {
     all: `${BASE_URL}/employees`,
     create: `${BASE_URL}/employees`,
   },
   rentals: {
+    all: `${BASE_URL}/leasings`,
     create: `${BASE_URL}/leasings`,
+    todaysPickups: `${BASE_URL}/leasings/todays-pickups`,
+    todaysReturns: `${BASE_URL}/leasings/todays-returns`,
+    tomorrowsPickups: `${BASE_URL}/leasings/tomorrows-pickups`,
+    tomorrowsReturns: `${BASE_URL}/leasings/tomorrows-returns`,
+  },
+  users: {
+    update: `${BASE_URL}/users`,
+    staff: `${BASE_URL}/users/staff`,
+  },
+  customers: {
+    all: `${BASE_URL}/customers`,
+  },
+  invoices: {
+    all: `${BASE_URL}/invoices`,
+    create: `${BASE_URL}/invoices`,
+  },
+  payments: {
+    all: `${BASE_URL}/payments`,
+    create: `${BASE_URL}/payments`,
   },
 };
 
@@ -30,6 +51,19 @@ export const ROUTES = {
     index: "/home",
     vehiclesRental: "/home/vehicle-rental",
   },
-  employees: "/employees",
-  admin: "/admin",
+  employee: {
+    index: "/employee",
+    leasings: "/employee/leasings",
+    payments: "/employee/payments",
+    calendar: "/employee/calendar",
+    garage: "/employee/garage",
+    vehicleProperties: "/employee/vehicle-properties",
+    invoices: `/employee/invoices`,
+    analytics: `/employee/analytics`,
+  },
+  admin: {
+    index: "/admin",
+    assignEmployee: "/admin/assign-employee",
+    revokeAccess: "/admin/revoke-access",
+  },
 };

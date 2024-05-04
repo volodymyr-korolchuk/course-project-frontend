@@ -2,6 +2,7 @@ import CollapsibleWrapper from "../Collapsibles/CollapsibleWrapper";
 import { IoIosArrowBack } from "react-icons/io";
 import { DropdownMenuSeparator } from "../ui/dropdown-menu";
 import { Link } from "react-router-dom";
+import { ROUTES } from "@/api";
 
 const CollapsibleEntry = ({ textContent }: { textContent: string }) => {
   return (
@@ -22,17 +23,17 @@ const CollapsibleEntry = ({ textContent }: { textContent: string }) => {
 
 const Sidebar = () => {
   const carRentalEntries = [
-    { path: "/home/leasings", title: "Leasings" },
-    { path: "/home/payments", title: "Payments" },
-    { path: "/home/calendar", title: "Calendar" },
+    { path: ROUTES.employee.leasings, title: "Leasings" },
+    { path: ROUTES.employee.invoices, title: "Invoices" },
+    { path: ROUTES.employee.payments, title: "Payments" },
+    { path: ROUTES.employee.analytics, title: "Analytics" },
   ];
-
-  const fleetEntries = ["Garage", "Classes", "In Use"];
+  const fleetEntries = [{ path: ROUTES.employee.garage, title: "Garage" }];
 
   return (
-    <aside className="w-60 dark:bg-neutral-950 border-r-[1px] border-neutral-800 h-full p-2">
+    <aside className="w-[240px] dark:bg-neutral-950 border-r-[1px] border-neutral-800 h-full p-2">
       <section className="flex flex-col items-center justify-center gap-2">
-        <CollapsibleWrapper triggerTitle="Car Rental">
+        <CollapsibleWrapper triggerTitle="Car Leasings">
           {carRentalEntries.map((item) => (
             <Link to={item.path}>
               <CollapsibleEntry key={item.path} textContent={item.title} />
@@ -42,7 +43,9 @@ const Sidebar = () => {
 
         <CollapsibleWrapper triggerTitle="Fleet">
           {fleetEntries.map((item) => (
-            <CollapsibleEntry key={item} textContent={item} />
+            <Link to={item.path}>
+              <CollapsibleEntry key={item.path} textContent={item.title} />
+            </Link>
           ))}
         </CollapsibleWrapper>
       </section>

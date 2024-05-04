@@ -7,7 +7,6 @@ export type Rental = {
   vehicleClass: string;
   vehicle: string;
   totalPrice: number;
-  status: string; // TODO: define a proper set of statuses
 };
 
 export type Employee = {
@@ -17,7 +16,13 @@ export type Employee = {
   lastName: string;
 };
 
-export type Customer = {};
+export type Customer = {
+  id: number;
+  userId: number;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+};
 
 export type CreateRental = {
   vehicleId: number;
@@ -26,6 +31,7 @@ export type CreateRental = {
   pickupDate: string;
   returnDate: string;
   allowedMileage: number;
+  amountDue: number;
 };
 
 export type ParkingLocation = {
